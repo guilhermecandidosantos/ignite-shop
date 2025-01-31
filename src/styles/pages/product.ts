@@ -1,4 +1,4 @@
-import { styled } from "..";
+import { styled } from '..';
 
 export const ProductContainer = styled('main', {
   display: 'grid',
@@ -7,7 +7,7 @@ export const ProductContainer = styled('main', {
   gap: '4rem',
   maxWidth: 1180,
   margin: '0 auto',
-})
+});
 
 export const ImageContainer = styled('div', {
   width: '100%',
@@ -23,7 +23,7 @@ export const ImageContainer = styled('div', {
   img : {
     objectFit: 'cover'
   }
-})
+});
 
 export const ProductDetails = styled('div', {
   display: 'flex',
@@ -69,4 +69,4 @@ export const ProductDetails = styled('div', {
     }
     
   },
-})
+});
