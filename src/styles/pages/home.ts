@@ -4,17 +4,16 @@ import { styled } from '..';
 
 export const HomeContainer = styled('main', {
   display: 'flex',
-  // gap: '3rem',
   width: '100%',
   maxWidth: 'calc(100vw - ((100vw - 1180px) /2))',
   marginLeft: 'auto',
   minHeight: 656,
+  position: 'relative',
 });
 
 export const Product = styled(Link, {
   background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
   borderRadius: 8,
-  // padding: '0.25rem',
   cursor: 'pointer',
   position: 'relative',
   display: 'flex',
@@ -45,15 +44,20 @@ export const Product = styled(Link, {
     opacity: 0,
     transition: 'all 0.2s ease-in-out',
 
-    strong: {
-      fontSize: '$lg',
-      color: '$gray100'
-    },
+    div: {
+      display: 'flex',
+      flexDirection: 'column',
 
-    span: {
-      fontSize: '$xl',
-      fontWeight: 'bold',
-      color: '$green300'
+      strong: {
+        fontSize: '$lg',
+        color: '$gray100'
+      },
+
+      span: {
+        fontSize: '$xl',
+        fontWeight: 'bold',
+        color: '$green300'
+      }
     }
   },
 
@@ -63,4 +67,45 @@ export const Product = styled(Link, {
       opacity: 1,
     }
   }
+});
+
+export const ButtonBuy = styled('button', {
+  padding: 12,
+  borderRadius: 6,
+  background: '$green500',
+  border: 'none',
+  color: '$white',
+  cursor: 'pointer',
+
+  '&:hover': {
+    background: '$green300',
+  }
+});
+
+const ButtonBase = styled('button', {
+  height: '100%',
+  width: 86,
+  border: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  color: '$gray300',
+  cursor: 'pointer',
+});
+
+export const ButtonLeft = styled(ButtonBase, {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  paddingLeft: 16 ,
+  background: 'linear-gradient(90deg, #121214 0%, #12121405 100%)',
+});
+
+export const ButtonRight = styled(ButtonBase, {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  display: 'flex',
+  justifyContent: 'end',
+  paddingRight: 16 ,
+  background: 'linear-gradient(90deg, #12121405 0%, #121214 100%)',
 });

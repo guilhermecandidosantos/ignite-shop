@@ -26,7 +26,7 @@ export default [
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       '@stylistic/max-len': ['warn', {
-        code: 80,
+        code: 100,
         tabWidth: 2,
         ignoreUrls: true,
         ignoreComments: false,

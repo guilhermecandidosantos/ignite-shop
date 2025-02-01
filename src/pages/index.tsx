@@ -7,7 +7,9 @@ import Image from 'next/image';
 import Stripe from 'stripe';
 
 import { stripe } from '../lib/stripe';
-import { HomeContainer, Product } from '../styles/pages/home';
+import { ButtonBuy, ButtonLeft, ButtonRight, HomeContainer, Product } from '../styles/pages/home';
+import { CaretLeft, CaretRight, Handbag } from '@phosphor-icons/react';
+import { useState } from 'react';
 
 interface HomeProps {
   products: {
@@ -19,10 +21,17 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
-  const [sliderRef] = useKeenSlider({
+  const [currentSlide, setCurrentSlide] = useState(0)
+  let totalSlides = 0
+
+  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     slides: {
       perView: 3,
       spacing: 48
+    },
+    slideChanged(slide) {
+      setCurrentSlide(slide.track.details.rel);
+      totalSlides = slide.track.details.length;
     }
   });
 
@@ -44,13 +53,35 @@ export default function Home({ products }: HomeProps) {
               <Image src={product.imageUrl} width={520} height={480} alt="" />
 
               <footer>
-                <strong>{product.name}</strong>
-                <span>{product.price}</span>
+                <div>
+                  <strong>{product.name}</strong>
+                  <span>{product.price}</span>
+                </div>
+
+                <ButtonBuy>
+                  <Handbag size={24} weight='bold' />
+                </ButtonBuy>
               </footer>
             </Product>
 
           );
         })}
+
+        {currentSlide > 0 &&
+          (
+            <ButtonLeft onClick={() => instanceRef.current.prev()}>
+              <CaretLeft size={28}  />
+            </ButtonLeft>
+          )
+        }
+
+        {currentSlide === totalSlides &&
+        (
+          <ButtonRight onClick={() => instanceRef.current.next()}>
+            <CaretRight size={28} />
+          </ButtonRight>
+        )
+        }
       </HomeContainer>
     </>
   );
