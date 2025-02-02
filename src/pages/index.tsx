@@ -1,28 +1,43 @@
 import 'keen-slider/keen-slider.min.css';
 
+import { CaretLeft, CaretRight, Handbag } from '@phosphor-icons/react';
 import { useKeenSlider } from 'keen-slider/react';
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import { MouseEvent, useContext, useState } from 'react';
 import Stripe from 'stripe';
 
+import { CartContextProvider } from '../context/cartContext';
 import { stripe } from '../lib/stripe';
+import { ProductItemContainer } from '../styles/pages/app';
 import { ButtonBuy, ButtonLeft, ButtonRight, HomeContainer, Product } from '../styles/pages/home';
-import { CaretLeft, CaretRight, Handbag } from '@phosphor-icons/react';
-import { useState } from 'react';
 
 interface HomeProps {
   products: {
     id: string;
     name: string;
     imageUrl: string;
-    price: string;
+    price: number;
+    description: string;
+    defaultPriceId: string
   }[]
 }
 
+interface IItem {
+  id: string;
+  name: string;
+  imageUrl: string;
+  price: number
+  description: string;
+  defaultPriceId: string
+}
+
 export default function Home({ products }: HomeProps) {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  let totalSlides = 0
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const { addProductOnCart } = useContext(CartContextProvider);
+
+  let totalSlides = 0;
 
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     slides: {
@@ -35,6 +50,11 @@ export default function Home({ products }: HomeProps) {
     }
   });
 
+  async function handleAddProductOnCart(event: MouseEvent ,item: IItem) {
+    event.preventDefault();
+    addProductOnCart(item);
+  };
+
   return (
     <>
       <Head>
@@ -44,26 +64,30 @@ export default function Home({ products }: HomeProps) {
       <HomeContainer ref={sliderRef} className="keen-slider">
         {products.map((product) => {
           return (
-            <Product 
-              href={`/product/${product.id}`}
-              key={product.id}  
-              className="keen-slider__slide"
-              prefetch={false}
-            >
-              <Image src={product.imageUrl} width={520} height={480} alt="" />
+            <ProductItemContainer key={product.id}>
+              <Product 
+                href={`/product/${product.id}`}
+                  
+                className="keen-slider__slide"
+                prefetch={false}
+              >
+                <Image src={product.imageUrl} width={520} height={480} alt="" />
 
-              <footer>
-                <div>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
-                </div>
+                <footer>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.price.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL'
+                    })}</span>
+                  </div>
 
-                <ButtonBuy>
-                  <Handbag size={24} weight='bold' />
-                </ButtonBuy>
-              </footer>
-            </Product>
-
+                  <ButtonBuy onClick={(event) => handleAddProductOnCart(event, product)} >
+                    <Handbag size={24} weight="bold" />
+                  </ButtonBuy>
+                </footer>
+              </Product>
+            </ProductItemContainer>
           );
         })}
 
@@ -98,10 +122,9 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      }).format(price.unit_amount / 100)
+      price: price.unit_amount / 100,
+      describe: product.description,
+      defaultPriceId: price.id
     };
   });
 

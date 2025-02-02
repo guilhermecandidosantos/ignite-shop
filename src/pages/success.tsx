@@ -2,20 +2,28 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext, useEffect } from 'react';
 import Stripe from 'stripe';
 
+import { CartContextProvider } from '../context/cartContext';
 import { stripe } from '../lib/stripe';
-import { ImageContainer, SuccessContainer } from '../styles/pages/success';
+import { ImageBackground, ImageContainer, SuccessContainer } from '../styles/pages/success';
 
 interface SuccessProps {
   customerName: string;
-  product: {
+  products: {
     name: string;
     imageUrl: string;
-  };
+  }[];
 }
 
-export default function Success({ customerName, product }: SuccessProps) {
+export default function Success({ customerName, products }: SuccessProps) {
+  const { clearStateShop } = useContext(CartContextProvider);
+
+  useEffect(() => {
+    clearStateShop();
+  }, []);
+
   return (
     <>
       <Head>
@@ -26,12 +34,21 @@ export default function Success({ customerName, product }: SuccessProps) {
       <SuccessContainer>
         <h1>Compra efetuada!</h1>      
 
+        {/* <Image src={product.imageUrl} width={120} height={110} alt="" /> */}
         <ImageContainer>
-          <Image src={product.imageUrl} width={120} height={110} alt="" />
+          {products.map((product, i) => {
+            return (
+              <ImageBackground key={i}>
+                <Image src={product.imageUrl} width={120} height={110} alt="" />
+              </ImageBackground>
+            );
+
+          })}
         </ImageContainer>
 
         <p>
-          Uhuul <strong>{customerName}</strong>, sua <strong>{product.name}</strong> já está a caminho da sua casa. 
+          Uhuul <strong>{customerName}</strong>, sua compra de {products.length} 
+          {products.length === 1 ? ' camiseta ' : ' camisetas '}já está a caminho da sua casa. 
         </p>
 
         <Link href="/">
@@ -62,13 +79,21 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const customerName = session.customer_details.name;
   const product = session.line_items.data[0].price.product as Stripe.Product;
 
+  const lineItems = session.line_items.data.map((item) => {
+    return item.price.product as Stripe.Product;
+  });
+
+  const products = lineItems.map((item) => {
+    return {
+      name: item.name,
+      imageUrl: item.images[0],
+    };
+  });
+
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0]
-      }
+      products
     }
   };
 };

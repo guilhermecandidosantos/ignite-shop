@@ -10,11 +10,11 @@ import {
 } from 'react';
 
 import {
-  DialogRadixClose,
-  DialogRadixContent,
-  DialogRadixOverlay,
+  DialogRadixClose, 
+  DialogRadixContent, 
+  DialogRadixOverlay, 
   DialogRadixTitle
-} from '../styles/components/dialog';
+} from './style';
 
 export const DialogOpenContext = createContext<boolean>(false);
 
