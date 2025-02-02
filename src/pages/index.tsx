@@ -11,7 +11,14 @@ import Stripe from 'stripe';
 import { CartContextProvider } from '../context/cartContext';
 import { stripe } from '../lib/stripe';
 import { ProductItemContainer } from '../styles/pages/app';
-import { Button, ButtonBuy, ButtonLeft, ButtonRight, HomeContainer, Product } from '../styles/pages/home';
+import {
+  Button, 
+  ButtonBuy, 
+  ButtonLeft,
+  ButtonRight, 
+  HomeContainer, 
+  Product
+} from '../styles/pages/home';
 
 interface HomeProps {
   products: {
