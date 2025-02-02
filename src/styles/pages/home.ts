@@ -40,9 +40,11 @@ export const Product = styled(Link, {
 
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
 
-    transform: 'translateY(110%)',
-    opacity: 0,
-    transition: 'all 0.2s ease-in-out',
+    '@sm': {
+      transform: 'translateY(110%)',
+      opacity: 0,
+      transition: 'all 0.2s ease-in-out',
+    },
 
     div: {
       display: 'flex',
@@ -61,10 +63,12 @@ export const Product = styled(Link, {
     }
   },
 
-  '&:hover': {
-    footer: {
-      transform: 'translateY(0)',
-      opacity: 1,
+  '@sm': {
+    '&:hover': {
+      footer: {
+        transform: 'translateY(0)',
+        opacity: 1,
+      }
     }
   }
 });
@@ -82,21 +86,23 @@ export const ButtonBuy = styled('button', {
   }
 });
 
-const ButtonBase = styled('button', {
+const ButtonBase = styled('div', {
   height: '100%',
   width: 86,
   border: 'none',
   display: 'flex',
   alignItems: 'center',
-  color: '$gray300',
-  cursor: 'pointer',
+  pointerEvents: 'none',
+
+  '@smM': {
+    width: 56
+  }
 });
 
 export const ButtonLeft = styled(ButtonBase, {
   position: 'absolute',
   top: 0,
   left: 0,
-  paddingLeft: 16 ,
   background: 'linear-gradient(90deg, #121214 0%, #12121405 100%)',
 });
 
@@ -106,6 +112,17 @@ export const ButtonRight = styled(ButtonBase, {
   right: 0,
   display: 'flex',
   justifyContent: 'end',
-  paddingRight: 16 ,
   background: 'linear-gradient(90deg, #12121405 0%, #121214 100%)',
+});
+
+export const Button = styled('button', {
+  display: 'flex',
+  alignItems: 'center',
+  color: '$gray300',
+  cursor: 'pointer',
+  background: 'none',
+  border: 'none',
+  pointerEvents: 'visible',
+  padding: 26,
+  
 });

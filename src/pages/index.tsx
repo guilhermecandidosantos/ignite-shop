@@ -11,7 +11,7 @@ import Stripe from 'stripe';
 import { CartContextProvider } from '../context/cartContext';
 import { stripe } from '../lib/stripe';
 import { ProductItemContainer } from '../styles/pages/app';
-import { ButtonBuy, ButtonLeft, ButtonRight, HomeContainer, Product } from '../styles/pages/home';
+import { Button, ButtonBuy, ButtonLeft, ButtonRight, HomeContainer, Product } from '../styles/pages/home';
 
 interface HomeProps {
   products: {
@@ -36,8 +36,7 @@ interface IItem {
 export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { addProductOnCart } = useContext(CartContextProvider);
-
-  let totalSlides = 0;
+  const [totalSlides, setTotalSlides] = useState(0);
 
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     slides: {
@@ -46,7 +45,29 @@ export default function Home({ products }: HomeProps) {
     },
     slideChanged(slide) {
       setCurrentSlide(slide.track.details.rel);
-      totalSlides = slide.track.details.length;
+      setTotalSlides(slide.track.details.slides.length - 3);
+    },
+    breakpoints: {
+      '(max-width: 1000px)': {
+        slides: {
+          perView: 2,
+          spacing: 48
+        },
+        slideChanged(slide) {
+          setCurrentSlide(slide.track.details.rel);
+          setTotalSlides(slide.track.details.slides.length - 2);
+        },
+      },
+      '(max-width: 640px)': {
+        slides: {
+          perView: 1,
+          spacing: 48
+        },
+        slideChanged(slide) {
+          setCurrentSlide(slide.track.details.rel);
+          setTotalSlides(slide.track.details.slides.length - 1);
+        },
+      }
     }
   });
 
@@ -93,18 +114,22 @@ export default function Home({ products }: HomeProps) {
 
         {currentSlide > 0 &&
           (
-            <ButtonLeft onClick={() => instanceRef.current.prev()}>
-              <CaretLeft size={28}  />
+            <ButtonLeft>
+              <Button onClick={() => instanceRef.current.prev()}>
+                <CaretLeft size={28}  />
+              </Button>
             </ButtonLeft>
           )
         }
 
-        {currentSlide === totalSlides &&
-        (
-          <ButtonRight onClick={() => instanceRef.current.next()}>
-            <CaretRight size={28} />
-          </ButtonRight>
-        )
+        { currentSlide < totalSlides  || currentSlide === 0 ? 
+          (
+            <ButtonRight>
+              <Button onClick={() => instanceRef.current.next()}>
+                <CaretRight size={28} />
+              </Button>
+            </ButtonRight>
+          ) : null
         }
       </HomeContainer>
     </>
