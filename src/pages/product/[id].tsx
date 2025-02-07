@@ -2,6 +2,7 @@ import axios from 'axios';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import Stripe from 'stripe';
 
@@ -26,9 +27,14 @@ interface ProductProps {
 
 export default function Product({ product }: ProductProps) {
   const { addProductOnCart } = useContext(CartContextProvider);
+  const router = useRouter();
 
   async function handleAddProductOnCart() {
     addProductOnCart(product);
+  }
+
+  if(router.isFallback) {
+    return <div>Carregando...</div>;
   }
 
   return (
