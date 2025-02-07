@@ -22,7 +22,7 @@ export default function Success({ customerName, products }: SuccessProps) {
 
   useEffect(() => {
     clearStateShop();
-  }, []);
+  }, [clearStateShop]);
 
   return (
     <>
