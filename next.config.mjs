@@ -9,7 +9,11 @@ const nextConfig = {
         pathname: '/**',
       },
     ]
-  }
+  },
+  experimental: {
+    optimizePackageImports: ['@phosphor-icons/react'],
+  },
+  
 };
 
 export default nextConfig;
