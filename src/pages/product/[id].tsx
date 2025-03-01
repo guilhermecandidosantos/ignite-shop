@@ -1,10 +1,11 @@
-import axios from 'axios';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useContext } from 'react';
 import Stripe from 'stripe';
 
+import Skeleton from '../../components/Skeleton';
 import { CartContextProvider } from '../../context/cartContext';
 import { stripe } from '../../lib/stripe';
 import { 
@@ -26,9 +27,45 @@ interface ProductProps {
 
 export default function Product({ product }: ProductProps) {
   const { addProductOnCart } = useContext(CartContextProvider);
-
+  const  router = useRouter();
+  
   async function handleAddProductOnCart() {
     addProductOnCart(product);
+  }
+
+  if(router.isFallback) {
+    return (
+      <>
+        <Head>
+          <title>Produto Ignite Shop</title>
+        </Head> 
+        
+        <ProductContainer>
+          <ImageContainer>
+            <Skeleton height="100%" />
+          </ImageContainer>
+  
+          <ProductDetails>
+            <h1>
+              <Skeleton width={300} height={20} />
+            </h1>
+            <span>
+              <Skeleton width={100} height={28} />
+            </span>
+  
+            <p>
+              <Skeleton width="500px" count={5} />
+            </p>
+  
+            <button 
+              onClick={handleAddProductOnCart} 
+            >
+              Colocar na sacola
+            </button>
+          </ProductDetails>
+        </ProductContainer>
+      </>
+    );
   }
 
   return (
@@ -66,7 +103,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: [
       { params: {  id: 'prod_RetKFpg0DWtKrG' } }
     ],
-    fallback: 'blocking'
+    fallback: true
   };
 };
 
